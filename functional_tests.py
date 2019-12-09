@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
 import unittest
 class NewVisitorTest(unittest.TestCase):
     '''тест нового посетителя'''
@@ -25,22 +27,20 @@ class NewVisitorTest(unittest.TestCase):
             inputbox.get_attribute('placeholder'),
             'Enter a to-do item')
         
-         # (ее хобби – вязание рыболовных мушек)
-         inputbox.send_keys('Купить павлиньи перья')
-         # Когда она нажимает enter, страница обновляется, и теперь страница
-         # содержит "1: Купить павлиньи перья" в качестве элемента списка
-         inputbox.send_keys(Keys.ENTER)
-         time.sleep(1)
-         table = self.browser.find_element_by_id('id_list_table')
-         rows = table.find_elements_by_tag_name('tr')
-         self.assertTrue(
-             any(row.text == '1: Купить павлиньи перья' for row in rows)
-             )
-         # Текствое поле по-прежнему приглашает ее добавить еще один элемент.
-         # Она вводит "Сделать мушку из павлиньих перьев"
-         # (Эдит очень методична)
-         self.fail('Закончить тест!')
-         # Страница снова обновляется и теперь показывает оба элемента
-         # ее списка         [...]
+        # (ее хобби – вязание рыболовных мушек)
+        inputbox.send_keys('Купить павлиньи перья')
+        # Когда она нажимает enter, страница обновляется, и теперь страница
+        # содержит "1: Купить павлиньи перья" в качестве элемента списка
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertTrue(any(row.text == '1: Купить павлиньи перья' for row in rows), "Новый элемент списка не появился в таблице")
+        # Текствое поле по-прежнему приглашает ее добавить еще один элемент.
+        # Она вводит "Сделать мушку из павлиньих перьев"
+        # (Эдит очень методична)
+        self.fail('Закончить тест!')
+        # Страница снова обновляется и теперь показывает оба элемента
+        # ее списка         [...]
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
