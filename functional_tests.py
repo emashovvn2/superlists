@@ -14,10 +14,33 @@ class NewVisitorTest(unittest.TestCase):
         # списком неотложных дел. Она решает оценить его
         # домашнюю страницу
         self.browser.get('http://localhost:8000')
-        # Она видит, что заголовок и шапка страницы говорят о
-        # списках неотложных дел
+        # Она видит, что заголовок и шапка страницы говорят о списках
+        # неотложных дел
         self.assertIn('To-Do', self.browser.title)
-        self.fail('Закончить тест!')
-        # Ей сразу же предлагается ввести элемент списка        [...остальные комментарии, как и прежде]
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('To-Do', header_text)
+        # Ей сразу же предлагается ввести элемент списка
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertEqual(
+            inputbox.get_attribute('placeholder'),
+            'Enter a to-do item')
+        
+         # (ее хобби – вязание рыболовных мушек)
+         inputbox.send_keys('Купить павлиньи перья')
+         # Когда она нажимает enter, страница обновляется, и теперь страница
+         # содержит "1: Купить павлиньи перья" в качестве элемента списка
+         inputbox.send_keys(Keys.ENTER)
+         time.sleep(1)
+         table = self.browser.find_element_by_id('id_list_table')
+         rows = table.find_elements_by_tag_name('tr')
+         self.assertTrue(
+             any(row.text == '1: Купить павлиньи перья' for row in rows)
+             )
+         # Текствое поле по-прежнему приглашает ее добавить еще один элемент.
+         # Она вводит "Сделать мушку из павлиньих перьев"
+         # (Эдит очень методична)
+         self.fail('Закончить тест!')
+         # Страница снова обновляется и теперь показывает оба элемента
+         # ее списка         [...]
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
