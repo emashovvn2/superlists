@@ -1,7 +1,6 @@
-from django.shortcuts import render
 from django.http import HttpResponse
-
-# Создайте здесь ваши представления.
+from django.shortcuts import render
 def home_page(request):
-    '''домашняя страница'''
-    return render(request, 'home.html')
+	'''домашняя страница'''
+	print(request.POST.get('item_text',''))
+	return render(request, 'home.html', {'new_item_text': request.POST.get('item_text','')})

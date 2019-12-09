@@ -23,9 +23,7 @@ class NewVisitorTest(unittest.TestCase):
         self.assertIn('To-Do', header_text)
         # Ей сразу же предлагается ввести элемент списка
         inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertEqual(
-            inputbox.get_attribute('placeholder'),
-            'Enter a to-do item')
+        self.assertEqual(inputbox.get_attribute('placeholder'),'Enter a to-do item')
         
         # (ее хобби – вязание рыболовных мушек)
         inputbox.send_keys('Купить павлиньи перья')
@@ -35,12 +33,21 @@ class NewVisitorTest(unittest.TestCase):
         time.sleep(1)
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(any(row.text == '1: Купить павлиньи перья' for row in rows), "Новый элемент списка не появился в таблице")
-        # Текствое поле по-прежнему приглашает ее добавить еще один элемент.
-        # Она вводит "Сделать мушку из павлиньих перьев"
+        self.assertIn('1: Купить павлиньи перья', [row.text for row in rows])
+	#	f"Новый элемент списка не появился в таблице. Содержимым было:\n{table.text}")
+	# Текстовое поле по-прежнему приглашает ее добавить еще один элемент. Она
+        # вводит "Сделать мушку из павлиньих перьев" (Эдит очень методична)
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Сделать мушку из павлиньих перьев')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        # Страница снова обновляется и теперь показывает оба элемента ее списка
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: Купить павлиньи перья', [row.text for row in rows])
+        self.assertIn('2: Сделать мушку из павлиньих перьев',[row.text for row in rows])
         # (Эдит очень методична)
         self.fail('Закончить тест!')
-        # Страница снова обновляется и теперь показывает оба элемента
-        # ее списка         [...]
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
